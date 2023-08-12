@@ -1,78 +1,132 @@
 #include <stdio.h>
-typedef struct{
-    int at,bt,wt,tat,ct,status;
-}process;
-
-void sortWithBurstTime(process a[],int n)
+int noofp;
+int noofr;
+void display(int a[][noofr])
 {
-    process temp;
-    for(int i=0;i<n-1;i++)
+    for(int i=0;i<noofp;i++)
     {
-        for(int j=0;j<n-i-1;j++)
+        printf("\n");
+        for(int j=0;j<noofr;j++)
         {
-            if(a[j].bt>a[j+1].bt)
-            {
-                temp = a[j];
-                a[j] = a[j+1];
-                a[j+1] = temp;
-            }
+            printf("%d\t",a[i][j]);
+        }
+    }
+    printf("\n\n");
+}
+
+void findNeed(int allocation[][noofr],int max[][noofr],int need[][noofr])
+{
+    for(int i=0;i<noofp;i++)
+    {
+        for(int j=0;j<noofr;j++)
+        {
+            need[i][j]=max[i][j]-allocation[i][j];
         }
     }
 }
-int main()
+
+int isSafe(int allocation[][noofr],int max[][noofr],int need[][noofr],int available[noofr])
 {
-    int n,i;    
-    int totalTAT=0,totalWT=0,completed=0,currentTime=0;
-    printf("Enter the number of processes: ");
-    scanf("%d",&n);
-    process a[n];
-    printf("Enter the arrival time and burst time\n");
-    int sum=0;
-    for(i=0;i<n;i++)
+    int finish[noofp];
+    for(int i=0;i<noofp;i++)
     {
-        scanf("%d",&a[i].at);
-        scanf("%d",&a[i].bt);
-        sum+=a[i].bt;
-        a[i].status=0;
+        finish[i]=0;
     }
-    while(completed<n)
+    int work[noofr];
+    for(int i=0;i<noofr;i++)
     {
-        int sJob=-1;
-        int sBt = 99999;
-        for(int i=0;i<n;i++)
+        work[i]=available[i];
+    }
+    int completed=0;
+    while(completed<noofp)
+    {
+        int finishIsfalse=0;
+        for(int i=0;i<noofp;i++)
         {
-            if(a[i].status==0 && a[i].bt<sBt && a[i].at<=currentTime)
+            if(!finish[i])
             {
-                sJob = i;
-                sBt = a[i].bt;
+                int flag=1;
+                for(int j=0;j<noofr;j++)
+                {
+                    if(need[i][j]>work[j])
+                    {
+                        flag=0;
+                    }
+                }
+                if(flag)
+                {
+                    for(int j=0;j<noofr;j++)
+                    {
+                        work[j]+=allocation[i][j];
+                    }
+                    printf("P%d -> ",i);
+                    finish[i]=1;
+                    completed++;
+                    finishIsfalse=1;
+                }
             }
         }
-        if(sJob==-1)
+        if(finishIsfalse==0)
         {
-            currentTime++;
-        }
-        else
-        {
-            a[sJob].ct=currentTime+a[sJob].bt;
-            currentTime = a[sJob].ct;
-            a[sJob].tat = a[sJob].ct-a[sJob].at;
-            a[sJob].wt = a[sJob].tat-a[sJob].bt;
-            totalTAT+=a[sJob].tat;
-            totalWT+=a[sJob].wt;
-            completed++;
-                a[sJob].status=1;
+            break;
         }
     }
 
-    float avgTAT = (float)totalTAT/n;
-    float avgWT = (float)totalWT/n;
-    printf("\nPNo\tAT\tBT\tCT\tTAT\tWT\n");
-    for(i=0;i<n;i++)
+    if(completed<noofp)
+        return 0;
+    return 1;
+}
+int main()
+{
+    noofp=5,noofr=3;
+    // printf("Enter the no of processes: ");
+    // scanf("%d",&n);
+    // printf("Enter the no of resources: ");
+    // scanf("%d",&m);
+
+    // int allocation[n][m];
+    // int max[n][m];
+    // int available[m];
+
+    int need[noofp][noofr];
+    int allocation[5][3] = { {0,1,0},{2,0,0},{3,0,2},{2,1,1},{0,0,2} };
+    int max[5][3] = { {7,5,3},{3,2,2},{9,0,2},{2,2,2},{4,3,3} };
+    int available[3] = {3,3,2};
+
+
+    // printf("Enter the allocation matrix\n");
+    // for(int i=0;i<n;i++)
+    // {
+    //     for(int j=0;j<m;j++)
+    //     {
+    //         scanf("%d",&allocation[i][j]);
+    //     }
+    // }
+    // printf("Enter the maximum demand matrix\n");
+    // for(int i=0;i<n;i++)
+    // {
+    //     for(int j=0;j<m;j++)
+    //     {
+    //         scanf("%d",&max[i][j]);
+    //     }
+    // }
+
+    // printf("Enter the available resources: ");
+    // for(int i=0;i<m;i++)
+    // {
+    //     scanf("%d",&available[m]);
+    // }
+    // display(allocation);
+    // display(max);
+    findNeed(allocation,max,need);
+    if(isSafe(allocation,max,need,available))
     {
-        printf("P%d\t%d\t%d\t%d\t%d\t%d\n",i+1,a[i].at,a[i].bt,a[i].ct,a[i].tat,a[i].wt);
+        printf("\nSystem is in safe state\n");
     }
-    printf("\n");
-    printf("Average Waiting time = %f\n",avgWT);
-    printf("Average Turn Around time = %f\n",avgTAT);
+    else
+    {
+        printf("\nSystem is not in safe state\n");
+    }
+    // display(need);
 
 }
