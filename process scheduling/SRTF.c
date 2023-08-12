@@ -23,7 +23,6 @@ int main()
     int totalTAT=0;
     while(completed<n)
     {
-        // printf("Hi");
         int shortestJob=-1;
         int shortestTime = 99999;
         for(i=0;i<n;i++)

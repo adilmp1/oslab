@@ -1,0 +1,2 @@
+
+            // currentTime+= a[sJob].bt;
