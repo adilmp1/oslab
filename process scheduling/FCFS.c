@@ -1,40 +1,37 @@
 #include <stdio.h>
+typedef struct{
+    int at,bt,wt,tat,ct;
+}process;
 int main()
 {
-    int n,i;
+    int n,i;    
+    int totalTAT=0,totalWT=0;
     printf("Enter the number of processes: ");
     scanf("%d",&n);
-    int bt[n],at[n],wt[n],tat[n],ct[n];
-    printf("Enter the arrival times of n processes: ");
+    process a[n];
+    printf("Enter the arrival time and burst time\n");
     for(i=0;i<n;i++)
     {
-        scanf("%d",at+i);
+        scanf("%d",&a[i].at);
+        scanf("%d",&a[i].bt);
     }
     printf("Enter the burst times of n processes: ");
     int sum=0;
     for(i=0;i<n;i++)
     {
-        scanf("%d",bt+i);
-        sum+=bt[i];
-        ct[i]=sum;
-    }
-    int totalTAT=0,totalWT=0;
-    for(i=0;i<n;i++)
-    {
-        tat[i]=ct[i]-at[i];
-        totalTAT+=tat[i];
+        sum+=a[i].bt;
+        a[i].ct=sum;
+        a[i].tat = a[i].ct-a[i].at;
+        a[i].wt = a[i].tat-a[i].bt;
+        totalTAT+=a[i].tat;
+        totalWT+=a[i].wt;
     }
     float avgTAT = (float)totalTAT/n;
-    for(i=0;i<n;i++)
-    {
-        wt[i]=tat[i]-bt[i];
-        totalWT+=wt[i];
-    }
     float avgWT = (float)totalWT/n;
     printf("\nPNo\tAT\tBT\tCT\tTAT\tWT\n");
     for(i=0;i<n;i++)
     {
-        printf("P%d\t%d\t%d\t%d\t%d\t%d\n",i+1,at[i],bt[i],ct[i],tat[i],wt[i]);
+        printf("P%d\t%d\t%d\t%d\t%d\t%d\n",i+1,a[i].at,a[i].bt,a[i].ct,a[i].tat,a[i].wt);
     }
     printf("\n");
     printf("Average Waiting time = %f\n",avgWT);
