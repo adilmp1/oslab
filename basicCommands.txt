@@ -1,0 +1,29 @@
+date
+cal
+echo
+ls
+lp
+man
+who & whoami
+uptime
+uname
+hostname
+bc
+
+FILE MANIPULATION COMMANDS
+cat
+grep
+rm
+touch
+cp
+mv
+cut
+head
+tail
+chmod
+
+TEXT EDITOR COMMANDS
+ed
+ex
+vi
+EMACS
