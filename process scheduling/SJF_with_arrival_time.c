@@ -3,22 +3,6 @@ typedef struct{
     int at,bt,wt,tat,ct,status;
 }process;
 
-void sortWithBurstTime(process a[],int n)
-{
-    process temp;
-    for(int i=0;i<n-1;i++)
-    {
-        for(int j=0;j<n-i-1;j++)
-        {
-            if(a[j].bt>a[j+1].bt)
-            {
-                temp = a[j];
-                a[j] = a[j+1];
-                a[j+1] = temp;
-            }
-        }
-    }
-}
 int main()
 {
     int n,i;    
