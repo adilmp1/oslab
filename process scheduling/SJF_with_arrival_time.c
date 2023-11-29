@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <limits.h>
 typedef struct{
     int at,bt,wt,tat,ct,status;
 }process;
@@ -22,7 +23,7 @@ int main()
     while(completed<n)
     {
         int sJob=-1;
-        int sBt = 99999;
+        int sBt = INT_MAX;
         for(int i=0;i<n;i++)
         {
             if(a[i].status==0 && a[i].bt<sBt && a[i].at<=currentTime)
